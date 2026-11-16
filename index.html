@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0f1b3d">
+<title>MOCK TEST</title>
+<style>
+:root{
+  --ink:#0f1b3d; --ink2:#4a5578; --bg:#eef2fb; --card:#ffffff; --line:#d9e0f0;
+  --accent:#3b5bdb; --accent-soft:#e7ecff; --ok:#12a150; --ok-bg:#e6f7ee;
+  --bad:#d92d3f; --bad-bg:#fdecee; --radius:16px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;max-width:100%;overflow-x:hidden}
+body{
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  font-size:16px;line-height:1.5;color:var(--ink);
+  background:linear-gradient(180deg,#e3eaff 0,var(--bg) 220px);
+  min-height:100vh;min-height:100dvh;
+  padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));
+  -webkit-text-size-adjust:100%;
+}
+.app{width:100%;max-width:720px;margin:0 auto}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.title h1{margin:0;font-size:1.35rem;font-weight:800;letter-spacing:.06em;line-height:1.2}
+.title p{margin:2px 0 0;font-size:.85rem;color:var(--ink2);overflow-wrap:anywhere}
+.timer{flex:none;display:flex;align-items:center;gap:6px;background:var(--ink);color:#fff;padding:8px 14px;border-radius:999px;font-weight:700;font-variant-numeric:tabular-nums;font-size:1rem}
+.timer svg{width:16px;height:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 8px 28px rgba(15,27,61,.07)}
+.progress-meta{display:flex;justify-content:space-between;gap:8px;font-size:.88rem;color:var(--ink2);margin-bottom:8px;flex-wrap:wrap}
+.bar{height:8px;background:var(--accent-soft);border-radius:99px;overflow:hidden;margin-bottom:18px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),#6d86ff);border-radius:99px;transition:width .35s ease}
+.qhead{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.qnum{font-weight:800;color:var(--accent)}
+.level{font-size:.78rem;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.level.Medium{background:#fff3d6;color:#9a6200}
+.level.Tough{background:#fde4e7;color:#b3202f}
+.question{font-size:1.15rem;font-weight:650;line-height:1.45;margin:0 0 16px;overflow-wrap:anywhere}
+.options{display:grid;gap:10px}
+.opt{
+  display:flex;align-items:center;gap:12px;width:100%;min-height:58px;text-align:left;
+  padding:12px 14px;font:inherit;font-size:1rem;color:var(--ink);
+  background:#fff;border:2px solid var(--line);border-radius:14px;cursor:pointer;
+  transition:border-color .2s,background .2s,transform .12s;touch-action:manipulation;
+}
+.opt:hover:not(:disabled){border-color:var(--accent);background:#f6f8ff}
+.opt:active:not(:disabled){transform:scale(.985)}
+.opt:focus-visible,.btn:focus-visible{outline:3px solid #9db1ff;outline-offset:2px}
+.opt .tag{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:700;background:var(--accent-soft);color:var(--accent)}
+.opt .txt{flex:1;min-width:0;overflow-wrap:anywhere}
+.opt .ic{flex:none;width:26px;height:26px;display:none}
+.opt:disabled{cursor:default;opacity:1;color:var(--ink)}
+.opt.correct{border-color:var(--ok);background:var(--ok-bg)}
+.opt.correct .tag{background:var(--ok);color:#fff}
+.opt.correct .ic.tick{display:block}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.opt.wrong .tag{background:var(--bad);color:#fff}
+.opt.wrong .ic.cross{display:block}
+.opt.dim{opacity:.55}
+.feedback{margin-top:14px;padding:12px 14px;border-radius:12px;font-size:.95rem;display:none;overflow-wrap:anywhere}
+.feedback.show{display:block;animation:fade .3s ease}
+.feedback.ok{background:var(--ok-bg);color:#0b6b37}
+.feedback.bad{background:var(--bad-bg);color:#9c1c2b}
+.feedback small{display:block;margin-top:4px;color:var(--ink2)}
+.nav{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.btn{font:inherit;font-weight:700;font-size:1rem;min-height:52px;padding:12px 16px;border-radius:14px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;transition:transform .12s,background .2s,opacity .2s;touch-action:manipulation}
+.btn:active:not(:disabled){transform:scale(.98)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.submit{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.submit.pulse{animation:pulse 1.6s ease-in-out infinite}
+.hidden{display:none!important}
+/* result */
+.hero{text-align:center;padding:6px 0 14px}
+.ring{--p:0;width:150px;height:150px;border-radius:50%;margin:0 auto 12px;display:grid;place-items:center;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--accent-soft) 0)}
+.ring div{width:118px;height:118px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:2rem;font-weight:800;line-height:1.1}
+.ring small{display:block;font-size:.8rem;font-weight:600;color:var(--ink2)}
+.hero h2{margin:0 0 2px;font-size:1.3rem}
+.hero p{margin:0;color:var(--ink2)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.stat{background:#f6f8ff;border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}
+.stat span{display:block;font-size:.82rem;color:var(--ink2)}
+.stat b{display:block;font-size:1.25rem;overflow-wrap:anywhere}
+.stat.ok b{color:var(--ok)} .stat.bad b{color:var(--bad)}
+.stat.wide{grid-column:1/-1}
+.result .btn{width:100%;margin-top:16px}
+/* dialog */
+.overlay{position:fixed;inset:0;background:rgba(15,27,61,.55);display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}
+.dialog{background:#fff;border-radius:var(--radius);padding:20px;width:100%;max-width:380px;animation:fade .25s ease}
+.dialog h3{margin:0 0 6px}
+.dialog p{margin:0 0 16px;color:var(--ink2)}
+.dialog .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(59,91,219,.45)}50%{box-shadow:0 0 0 8px rgba(59,91,219,0)}}
+.qwrap{animation:fade .3s ease}
+@media (min-width:600px){.card{padding:26px}.question{font-size:1.25rem}.nav{grid-template-columns:1fr 1fr 1.3fr}.btn.submit{grid-column:auto}.stats{grid-template-columns:repeat(3,1fr)}.stat.wide{grid-column:auto}}
+@media (max-width:340px){.title h1{font-size:1.1rem}.timer{padding:6px 10px;font-size:.9rem}.question{font-size:1.05rem}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <h1>MOCK TEST</h1>
+      <p>Class 12 Physics: Electric Charges and Fields</p>
+    </div>
+    <div class="timer" aria-live="off">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg>
+      <span id="time">00:00</span>
+    </div>
+  </header>
+
+  <main id="quiz" class="card">
+    <div class="progress-meta"><span id="pos">Question 1 of 15</span><span id="ans">Answered 0 of 15</span></div>
+    <div class="bar" role="progressbar" aria-valuemin="0" aria-valuemax="15" id="barwrap"><i id="bar"></i></div>
+    <div class="qwrap" id="qwrap">
+      <div class="qhead"><span class="qnum" id="qnum"></span><span class="level" id="level"></span></div>
+      <p class="question" id="qtext"></p>
+      <div class="options" id="opts"></div>
+      <div class="feedback" id="fb" role="status"></div>
+    </div>
+    <div class="nav">
+      <button class="btn" id="prev" type="button">Previous</button>
+      <button class="btn primary" id="next" type="button">Next</button>
+      <button class="btn submit" id="submit" type="button">Submit Test</button>
+    </div>
+  </main>
+
+  <section id="result" class="card result hidden">
+    <div class="hero">
+      <div class="ring" id="ring"><div><span id="ringTxt"></span></div></div>
+      <h2>Test Completed</h2>
+      <p id="msg"></p>
+    </div>
+    <div class="stats">
+      <div class="stat"><span>Total Questions</span><b>15</b></div>
+      <div class="stat"><span>Total Marks</span><b>15</b></div>
+      <div class="stat"><span>Attempted Questions</span><b id="rAtt"></b></div>
+      <div class="stat ok"><span>Correct Answers</span><b id="rCor"></b></div>
+      <div class="stat bad"><span>Incorrect Answers</span><b id="rInc"></b></div>
+      <div class="stat"><span>Unattempted Questions</span><b id="rUn"></b></div>
+      <div class="stat"><span>Final Score</span><b id="rScore"></b></div>
+      <div class="stat"><span>Percentage</span><b id="rPct"></b></div>
+      <div class="stat wide"><span>Total Time Taken</span><b id="rTime"></b></div>
+    </div>
+    <button class="btn primary" id="restart" type="button">Restart Test</button>
+  </section>
+</div>
+
+<div class="overlay hidden" id="overlay">
+  <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dTitle">
+    <h3 id="dTitle">Submit the test?</h3>
+    <p id="dText"></p>
+    <div class="row">
+      <button class="btn" id="dCancel" type="button">Keep going</button>
+      <button class="btn primary" id="dOk" type="button">Submit</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var QUESTIONS = [
+    {l:"Easy",q:"What is the SI unit of electric charge?",o:["Ampere","Coulomb","Volt","Ohm"],a:1},
+    {l:"Easy",q:"What is the charge of an electron?",o:["Positive","Negative","Neutral","Zero"],a:1},
+    {l:"Easy",q:"Which law describes the force between two stationary point charges?",o:["Ohm's Law","Newton's Law","Coulomb's Law","Faraday's Law"],a:2},
+    {l:"Easy",q:"What is the SI unit of electric field intensity?",o:["Newton/Coulomb","Coulomb/Newton","Joule","Watt"],a:0},
+    {l:"Easy",q:"According to the law of conservation of charge, total electric charge in an isolated system is:",o:["Always increasing","Always decreasing","Constant","Always zero"],a:2},
+    {l:"Medium",q:"The direction of the electric field at a point is the direction of force on:",o:["A negative test charge","A positive test charge","A neutron","Any neutral particle"],a:1},
+    {l:"Medium",q:"Why do two electric field lines never intersect each other?",o:["Because electric fields are always zero","Because electric field has a unique direction at a point","Because charges cannot move","Because field lines are circular"],a:1},
+    {l:"Medium",q:"The direction of electric dipole moment is:",o:["From positive to negative charge","From negative to positive charge","Perpendicular to the dipole axis","Always downward"],a:1},
+    {l:"Medium",q:"The torque acting on an electric dipole in a uniform electric field is:",o:["pE cos θ","pE sin θ","p/E","E/p"],a:1},
+    {l:"Medium",q:"Electric flux through a flat surface in a uniform electric field is given by:",o:["EA sin θ","EA cos θ","E/A","E + A"],a:1,n:"Here, θ is the angle between the electric field and the normal to the surface."},
+    {l:"Tough",q:"According to Gauss's law, the total electric flux through a closed surface is:",o:["qε₀","q/ε₀","ε₀/q","Zero in every case"],a:1},
+    {l:"Tough",q:"The electric field due to an infinitely long uniformly charged straight wire at distance r is:",o:["λ/(2πε₀r)","λ/(4πε₀r²)","λr/ε₀","Zero"],a:0},
+    {l:"Tough",q:"The electric field due to an infinite plane sheet of charge with surface charge density σ is:",o:["σ/ε₀","σ/(2ε₀)","2σε₀","Zero"],a:1},
+    {l:"Tough",q:"A point charge Q is placed at the centre of a spherical Gaussian surface. If the radius of the sphere is doubled, the total electric flux will:",o:["Become double","Become half","Remain unchanged","Become four times"],a:2},
+    {l:"Tough",q:"The electric field at a distant axial point of an electric dipole is approximately:",o:["(1/4πε₀)(p/r³)","(1/4πε₀)(2p/r³)","(1/4πε₀)(p/r²)","(1/4πε₀)(2p/r²)"],a:1}
+  ];
+  var TOTAL = QUESTIONS.length;
+  var LET = ["A","B","C","D"];
+  var TICK = '<svg class="ic tick" viewBox="0 0 24 24" fill="none" stroke="#12a150" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round" aria-label="Correct"><path d="M4 12.5l5 5L20 6.5"/></svg>';
+  var CROSS = '<svg class="ic cross" viewBox="0 0 24 24" fill="none" stroke="#d92d3f" stroke-width="3.2" stroke-linecap="round" aria-label="Incorrect"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+
+  var $ = function(id){return document.getElementById(id);};
+  var cur = 0, answers = [], startTime = 0, timerId = null, finished = false, finalMs = 0;
+
+  function fmt(ms){
+    var s = Math.floor(ms/1000), m = Math.floor(s/60), r = s%60;
+    var h = Math.floor(m/60); m = m%60;
+    var p = function(n){return (n<10?"0":"")+n;};
+    return h>0 ? h+":"+p(m)+":"+p(r) : p(m)+":"+p(r);
+  }
+  function longTime(ms){
+    var s = Math.floor(ms/1000), m = Math.floor(s/60), r = s%60;
+    return m+" min "+r+" sec";
+  }
+  function tick(){ $("time").textContent = fmt(Date.now()-startTime); }
+  function startTimer(){
+    startTime = Date.now(); tick();
+    clearInterval(timerId);
+    timerId = setInterval(tick, 500);
+  }
+  function stopTimer(){ clearInterval(timerId); timerId = null; }
+
+  function answeredCount(){
+    var c = 0; for (var i=0;i<TOTAL;i++) if (answers[i] !== null) c++; return c;
+  }
+
+  function render(){
+    var d = QUESTIONS[cur], sel = answers[cur];
+    var wrap = $("qwrap");
+    wrap.style.animation = "none"; void wrap.offsetWidth; wrap.style.animation = "";
+    $("pos").textContent = "Question "+(cur+1)+" of "+TOTAL;
+    $("ans").textContent = "Answered "+answeredCount()+" of "+TOTAL;
+    $("bar").style.width = ((cur+1)/TOTAL*100)+"%";
+    $("barwrap").setAttribute("aria-valuenow", cur+1);
+    $("qnum").textContent = "Q"+(cur+1);
+    var lv = $("level"); lv.textContent = d.l; lv.className = "level "+d.l;
+    $("qtext").textContent = d.q;
+
+    var box = $("opts"); box.innerHTML = "";
+    d.o.forEach(function(text,i){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "opt"; b.setAttribute("data-i", i);
+      b.innerHTML = '<span class="tag">'+LET[i]+'</span><span class="txt"></span>'+TICK+CROSS;
+      b.querySelector(".txt").textContent = text;
+      if (sel !== null){
+        b.disabled = true;
+        if (i === d.a) b.classList.add("correct");
+        else if (i === sel) b.classList.add("wrong");
+        else b.classList.add("dim");
+      }
+      box.appendChild(b);
+    });
+
+    var fb = $("fb");
+    if (sel === null){ fb.className = "feedback"; fb.innerHTML = ""; }
+    else {
+      var ok = sel === d.a;
+      fb.className = "feedback show "+(ok ? "ok" : "bad");
+      var html = ok ? "<strong>Correct!</strong>" :
+        "<strong>Incorrect.</strong> Correct answer: "+LET[d.a]+". ";
+      fb.innerHTML = html;
+      if (!ok){ fb.appendChild(document.createTextNode(d.o[d.a])); }
+      if (d.n){ var s = document.createElement("small"); s.textContent = d.n; fb.appendChild(s); }
+    }
+
+    $("prev").disabled = cur === 0;
+    $("next").disabled = cur === TOTAL-1;
+    var sb = $("submit");
+    sb.classList.toggle("pulse", cur === TOTAL-1);
+  }
+
+  function choose(i){
+    if (finished || answers[cur] !== null) return;   // locked: counted only once
+    answers[cur] = i;
+    render();
+  }
+
+  function showResult(){
+    finished = true; stopTimer();
+    finalMs = Date.now()-startTime;
+    var att = answeredCount(), cor = 0;
+    for (var i=0;i<TOTAL;i++) if (answers[i] === QUESTIONS[i].a) cor++;
+    var inc = att-cor, un = TOTAL-att;
+    var pct = cor/TOTAL*100;
+    var pctTxt = (Math.round(pct*100)/100).toString().replace(/\.0+$/,"")+"%";
+    $("rAtt").textContent = att;
+    $("rCor").textContent = cor;
+    $("rInc").textContent = inc;
+    $("rUn").textContent = un;
+    $("rScore").textContent = cor+" / "+TOTAL;
+    $("rPct").textContent = pctTxt;
+    $("rTime").textContent = fmt(finalMs)+" ("+longTime(finalMs)+")";
+    $("time").textContent = fmt(finalMs);
+    $("ringTxt").innerHTML = cor+'<small>out of '+TOTAL+'</small>';
+    $("ring").style.setProperty("--p", pct);
+    $("msg").textContent = pct>=80 ? "Excellent work!" : pct>=50 ? "Good effort. Keep practising." : "Revise the chapter and try again.";
+    $("quiz").classList.add("hidden");
+    $("result").classList.remove("hidden");
+    window.scrollTo(0,0);
+  }
+
+  function openDialog(){
+    var un = TOTAL-answeredCount();
+    $("dText").textContent = un>0
+      ? "You have "+un+" unanswered question"+(un>1?"s":"")+". You cannot change answers after submitting."
+      : "You have answered all questions. You cannot change answers after submitting.";
+    $("overlay").classList.remove("hidden");
+    $("dOk").focus();
+  }
+  function closeDialog(){ $("overlay").classList.add("hidden"); }
+
+  function restart(){
+    answers = []; for (var i=0;i<TOTAL;i++) answers.push(null);
+    cur = 0; finished = false; finalMs = 0;
+    $("result").classList.add("hidden");
+    $("quiz").classList.remove("hidden");
+    closeDialog();
+    render(); startTimer();
+    window.scrollTo(0,0);
+  }
+
+  $("opts").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest(".opt") : null;
+    if (b && !b.disabled) choose(parseInt(b.getAttribute("data-i"),10));
+  });
+  $("prev").addEventListener("click", function(){ if (cur>0){cur--; render();} });
+  $("next").addEventListener("click", function(){ if (cur<TOTAL-1){cur++; render();} });
+  $("submit").addEventListener("click", openDialog);
+  $("dCancel").addEventListener("click", closeDialog);
+  $("dOk").addEventListener("click", function(){ closeDialog(); showResult(); });
+  $("restart").addEventListener("click", restart);
+  document.addEventListener("keydown", function(e){
+    if (e.key === "Escape") closeDialog();
+  });
+  document.addEventListener("visibilitychange", function(){ if (!finished && !document.hidden) tick(); });
+
+  restart();
+})();
+</script>
+</body>
+</html>
